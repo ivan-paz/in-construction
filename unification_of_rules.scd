@@ -1,10 +1,10 @@
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//
 //                    script for
 //              unification of rules
 //
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-(
-//  data set for proves
+(//  data set for proves
 (~rules = [
 	[3,   [33, 659], 1],
 	[100, [33, 659], 1],
@@ -36,19 +36,18 @@ indexes.collect{ arg colToExclude;
 	subsets = temporalRules.slice(nil,section);
 	selection = temporalRules.slice(nil,colToExclude);
 	subsets.do{arg row,i;
-		'row: '.post; row.postln;
+		var values = [], indexes = [];
+		'row : '.post; row.postln;
 		subsets.do{arg row1,j;
-			var values = [];
 		if((row==row1)&&(i!=j)){
 			values = values.add(selection[i]);
 			values = values.add(selection[j]);
-			'row1: '.post;row1.postln;
+			indexes = indexes.add(i);indexes = indexes.add(j);
+		}
 		};
 		if(values.size>1){
 		values.postln;
-		//   unify intervals( values )
-
-		}
+		indexes.postln;
 		}
 	}
 }
@@ -64,15 +63,12 @@ indexes.collect{ arg colToExclude;
 });
 ~find_threshold.value(3,0,~intervals_and_distances);
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-//      3, 100   if abs(3 - 100) < threshold rule with [3,100] in position
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//  3, 100   if abs(3 - 100) < threshold rule with [3,100] in position
 //  [ 33, 659], 2 if abs( 33 - 2) < threshold rule with [2, 659] in position
-//    3 [33, 659] if abs( 3 - 33) < threshold rule with [3, 659] in position
+//  3 [33, 659] if abs( 3 - 33) < threshold rule with [3, 659] in position
 //  [33, 659] [21, 33]  if abs(21 - 33) < threshold rule with [21, 659] in position
-
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 (~unify_intervals = {arg values, intervals_and_distances;
 	//   ------  add here function to sort the 2DArray
 	values.size-1.do{arg i;
@@ -81,6 +77,7 @@ indexes.collect{ arg colToExclude;
 		values[i].postln;
 		values[i+1].postln;
 		threshold = ~find_threshold.value(values[i][0],0,intervals_and_distances);
+		//
 		if(abs(values[i][0]-values[i+1][0])<threshold){
 		newInt = [min(values[i][0],values[i+1][0]),max(values[i][1],values[i+1][1])];
 		'newInt: '.post; newInt.postln;
@@ -94,5 +91,31 @@ indexes.collect{ arg colToExclude;
 var values = [[21, 33], [33, 659]];
 ~unify_intervals.value(values,~intervals_and_distances).postln
 )
-//    ----    sort  2D Array
-
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//             function than receives the values and
+//          creates new intervals considering thresholds
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+(~unify_subsets = {arg array, intervals_and_distances;
+	var ta = [], sets=[], final_sets=[];
+	array = array.flat;
+	array = array.sort;
+	array.postln;
+	{array.size>1}.while{
+		var diff, distance;
+		distance = ~find_threshold.value(array.first,0,intervals_and_distances);
+		//'distance'.post;distance.postln;
+		ta=ta.add(array.first);
+		array=array[1..];
+		diff=abs(ta.last-array.first);
+		if(diff<distance){
+			ta=ta.add(array.first);
+			array=array[1..];
+		}{
+			sets = sets.add(ta); ta = []
+		}
+	};
+	if(ta.size>1){sets = sets.add(ta)};
+	sets.collect{arg set; if(set.size>1){final_sets =final_sets.add(set)}};
+	final_sets
+});
+~unify_subsets.value([[2600,2069],[21,33],[33,659]],~intervals_and_distances)
