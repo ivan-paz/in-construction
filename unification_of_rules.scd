@@ -64,14 +64,23 @@ indexes.collect{ arg colToExclude;
 });
 ~find_threshold.value(3,0,~intervals_and_distances);
 
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//      3, 100   if abs(3 - 100) < threshold rule with [3,100] in position
+//  [ 33, 659], 2 if abs( 33 - 2) < threshold rule with [2, 659] in position
+//    3 [33, 659] if abs( 3 - 33) < threshold rule with [3, 659] in position
+//  [33, 659] [21, 33]  if abs(21 - 33) < threshold rule with [21, 659] in position
 
-(~unify_intervals = {arg values;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+(~unify_intervals = {arg values, intervals_and_distances;
+	//   ------  add here function to sort the 2DArray
 	values.size-1.do{arg i;
 		var threshold;
 		var newInt;
 		values[i].postln;
 		values[i+1].postln;
-		threshold = ~find_threshold.value(values[i][0],0,~intervals_and_distances);
+		threshold = ~find_threshold.value(values[i][0],0,intervals_and_distances);
 		if(abs(values[i][0]-values[i+1][0])<threshold){
 		newInt = [min(values[i][0],values[i+1][0]),max(values[i][1],values[i+1][1])];
 		'newInt: '.post; newInt.postln;
@@ -80,8 +89,10 @@ indexes.collect{ arg colToExclude;
 		}
 	};
 	values
-})
+});
 (
 var values = [[21, 33], [33, 659]];
-~unify_intervals.value(values).postln
+~unify_intervals.value(values,~intervals_and_distances).postln
 )
+//    ----    sort  2D Array
+
