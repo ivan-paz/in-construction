@@ -4,26 +4,27 @@
 //              unification of rules
 //
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-(//  data set for proves
-(~rules = [
-	[3,   [33, 659], 1],
-	[100, [33, 659], 1],
-	[3,   [21, 33],  1],
-	[3,   300,       1]
-]);
-~intervals_and_distances = [
-      [
 
-              [ [0, inf], 1000]//,  [ [1, inf],  44 ]
-
-      ],
-
-      [
-
-              [ [0,inf], 500 ]
-      ]
-]
-)
+//(//  data set for proves
+//(~rules = [
+//	[3,   [33, 659], 1],
+//	[100, [33, 659], 1],
+//	[3,   [21, 33],  1],
+//	[3,   300,       1]
+//]);
+//~intervals_and_distances = [
+  //    [
+//
+  //            [ [0, inf], 1000]//,  [ [1, inf],  44 ]
+//
+  //    ],
+//
+  //    [
+//
+  //            [ [0,inf], 500 ]
+    //  ]
+//]
+//)
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 (~unification_of_rules = {
 arg rules, intervals_and_distances;
@@ -40,7 +41,7 @@ indexes.collect{ arg colToExclude;
 	selection = temporalRules.slice(nil,colToExclude);
 	subsets.do{ arg row, i;
 		var values = [], indexes = [];
-		'row : '.post; row.postln;
+		//'row : '.post; row.postln;
 		values = values.add(selection[i]);indexes=indexes.add(i);
 		subsets.do{ arg row1, j;
 		if((row==row1) && (i!=j)){
@@ -48,10 +49,10 @@ indexes.collect{ arg colToExclude;
 			values = values.add(selection[j]);
 			indexes = indexes.add(j)};
 		}};
-		if(values.size>1){values.post; indexes.postln;
+		if(values.size>1){ //values.post; indexes.postln;
 		newIntervals = ~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances)[0];
 		deleteIndexes = ~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances)[1];
-		[newIntervals,deleteIndexes].postln;
+		//[newIntervals,deleteIndexes].postln;
 		//////////   update
 		newIntervals.collect{ arg interval;
 			var newRule;
@@ -63,18 +64,13 @@ indexes.collect{ arg colToExclude;
 		}
 	};
 };
-'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'.postln;
+//'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'.postln;
+};
 temporalRules.do{arg x;
-	if(x.notNil){temporal = temporal.add(x)}
-};
-//result = result.add(temporal);
-};
-//result;
-temporalRules
+	if(x.notNil){result = result.add(x)}};
+result
 });
-a = ~unification_of_rules.value(~rules,~intervals_and_distances);
-a.do{|x| x.postln}
-
+//~unification_of_rules.value(~rules,~intervals_and_distances);
 (~find_threshold ={arg value, colToExclude, intervals_and_distances;
 	var threshold;
 	intervals_and_distances[colToExclude].do{ arg interval;
@@ -122,8 +118,7 @@ a.do{|x| x.postln}
 	};
 	[unifiedIntervals,indexesOfunifiedIntervals]
 });
-~unify_intervals.value([[33,659],[21,33],300],[0,2,3],0,~intervals_and_distances)
-
+//~unify_intervals.value([[33,659],[21,33],300],[0,2,3],0,~intervals_and_distances)
 (~class = {arg x;
 	var a, b;
 	if(x.class!=Array){a=x;b=x}{a=x[0];b=x[1]};
