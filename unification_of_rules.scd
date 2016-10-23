@@ -9,7 +9,7 @@
 	[3,   [33, 659], 1],
 	[100, [33, 659], 1],
 	[3,   [21, 33],  1],
-	[2,   300,       1]
+	[3,   300,       1]
 ]);
 ~intervals_and_distances = [
       [
@@ -20,7 +20,7 @@
 
       [
 
-              [ [0,inf], 1000 ]
+              [ [0,inf], 500 ]
       ]
 ]
 )
@@ -35,87 +35,85 @@ indexes.collect{ arg colToExclude;
 	section = (0.. indexes.size).removing(colToExclude);
 	subsets = temporalRules.slice(nil,section);
 	selection = temporalRules.slice(nil,colToExclude);
-	subsets.do{arg row,i;
+	subsets.do{arg row, i;
 		var values = [], indexes = [];
 		'row : '.post; row.postln;
-		subsets.do{arg row1,j;
-		if((row==row1)&&(i!=j)){
-			values = values.add(selection[i]);
+		values = values.add(selection[i]);indexes=indexes.add(i);
+		subsets.do{arg row1, j;
+		if((row==row1)&& (i!=j)){
 			values = values.add(selection[j]);
-			indexes = indexes.add(i);indexes = indexes.add(j);
+			indexes = indexes.add(j);
 		}
 		};
-		if(values.size>1){
-		values.postln;
-		indexes.postln;
-		}
-	}
+		if(values.size>1){values.postln;indexes.postln}
+	};
+	'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'.postln;
 }
 });
 ~unification_of_rules.value(~rules,~intervals_and_distances);
 
-(~find_threshold ={arg value, position, intervals_and_distances;
+(~find_threshold ={arg value, colToExclude, intervals_and_distances;
 	var threshold;
-	intervals_and_distances[position].do{ arg interval;
-		if((value>interval[0][0])&&(value<interval[0][1])){threshold=interval[1]}
+	intervals_and_distances[colToExclude].do{ arg interval;
+		if((value>interval[0][0])&&(value<=interval[0][1])){threshold=interval[1]}
 	};
 	threshold;
 });
-~find_threshold.value(3,0,~intervals_and_distances);
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-//  3, 100   if abs(3 - 100) < threshold rule with [3,100] in position
-//  [ 33, 659], 2 if abs( 33 - 2) < threshold rule with [2, 659] in position
-//  3 [33, 659] if abs( 3 - 33) < threshold rule with [3, 659] in position
-//  [33, 659] [21, 33]  if abs(21 - 33) < threshold rule with [21, 659] in position
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-(~unify_intervals = {arg values, intervals_and_distances;
-	//   ------  add here function to sort the 2DArray
-	values.size-1.do{arg i;
-		var threshold;
-		var newInt;
-		values[i].postln;
-		values[i+1].postln;
-		threshold = ~find_threshold.value(values[i][0],0,intervals_and_distances);
-		//
-		if(abs(values[i][0]-values[i+1][0])<threshold){
-		newInt = [min(values[i][0],values[i+1][0]),max(values[i][1],values[i+1][1])];
-		'newInt: '.post; newInt.postln;
-		values[i]=nil;
-		values[i+1]=newInt;
-		}
-	};
-	values
-});
-(
-var values = [[21, 33], [33, 659]];
-~unify_intervals.value(values,~intervals_and_distances).postln
-)
+//~find_threshold.value(3,0,~intervals_and_distances);
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //             function than receives the values and
 //          creates new intervals considering thresholds
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-(~unify_subsets = {arg array, intervals_and_distances;
-	var ta = [], sets=[], final_sets=[];
-	array = array.flat;
-	array = array.sort;
-	array.postln;
-	{array.size>1}.while{
-		var diff, distance;
-		distance = ~find_threshold.value(array.first,0,intervals_and_distances);
-		//'distance'.post;distance.postln;
-		ta=ta.add(array.first);
-		array=array[1..];
-		diff=abs(ta.last-array.first);
-		if(diff<distance){
-			ta=ta.add(array.first);
-			array=array[1..];
-		}{
-			sets = sets.add(ta); ta = []
-		}
+(~unify_intervals = {
+	arg values,indexes,colToExclude,intervals_and_distances;
+	var unifiedIntervals = [];
+	var indexesOfunifiedIntervals = [];
+	var threshold;
+	var passing = [];
+	var flag = 0;
+	var flatArray, newInterval;
+	(values.size-1).do{arg i;
+		if(flag==0){passing = passing.add(values.first)}{
+			passing = passing.add([flatArray[0],flatArray[3]])};
+		values = values[1..];
+		passing.postln;
+		values.postln;
+		a = ~class.value(passing.last);
+		b = ~class.value(values.first);
+		'flatArray: '.post;flatArray = [a,b].flat.sort.postln;
+		threshold = ~find_threshold.value(flatArray[1],colToExclude,intervals_and_distances);
+		if(
+			(abs(flatArray[0]-flatArray[1])<threshold) &&
+			(abs(flatArray[1]-flatArray[2])<threshold) &&
+			(abs(flatArray[2]-flatArray[3])<threshold)
+	){
+		'true'.postln;
+		if(unifiedIntervals.indexOfEqual([flatArray[0],flatArray[3]]).isNil){
+		unifiedIntervals = unifiedIntervals.add([flatArray[0],flatArray[3]])};
+		flag = 1;
+		if(indexesOfunifiedIntervals.indexOfEqual(indexes[i]).isNil){
+		indexesOfunifiedIntervals = indexesOfunifiedIntervals.add(indexes[i])};
+		if(indexesOfunifiedIntervals.indexOfEqual(indexes[i+1]).isNil){
+		indexesOfunifiedIntervals = indexesOfunifiedIntervals.add(indexes[i+1])};
+}{flag=0};
 	};
-	if(ta.size>1){sets = sets.add(ta)};
-	sets.collect{arg set; if(set.size>1){final_sets =final_sets.add(set)}};
-	final_sets
+	[unifiedIntervals,indexesOfunifiedIntervals]
 });
-~unify_subsets.value([[2600,2069],[21,33],[33,659]],~intervals_and_distances)
+~unify_intervals.value([[33,659],[21,33],300],[0,2,3],0,~intervals_and_distances)
+
+(~class = {arg x;
+	var a, b;
+	if(x.class!=Array){a=x;b=x}{a=x[0];b=x[1]};
+	[a,b]
+});
+//~class.value(2)
+
+
+
+
+
+
+
+
+
+
