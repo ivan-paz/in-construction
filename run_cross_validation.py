@@ -11,7 +11,6 @@
 #   Import functions
 from cross_validation_functions import *
 
-
 #   Load data
 data = load_data('blip_data.csv')
 
@@ -19,7 +18,12 @@ data = load_data('blip_data.csv')
 X,y = xy_arrays(data)
 create_train_test(X,y,10)
 
-###-------------------      run supercollider file
+
+##%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#                 Run SuperCollider file
+##%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 accuracy = []
 file_number = -1
 for i in range(10):
@@ -31,7 +35,7 @@ for i in range(10):
     X_test = X_test('X_test_'+str(file_number)+'.csv')
     y_test = y_test('y_test_'+str(file_number)+'.csv')
     scaled_test = scaled_test(X_test,data)
-    accuracy.append(get_accuracy_score(scaled_test,y_test,scaled_rules, 4))
+    accuracy.append(get_accuracy_score(scaled_test,y_test,scaled_rules, 2))
 
 from statistics import mean
 mean(accuracy)
@@ -40,7 +44,7 @@ mean(accuracy)
 
 """
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-   Manual version
+                      Manual version
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 """
 #   Import functions
