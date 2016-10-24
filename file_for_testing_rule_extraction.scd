@@ -29,3 +29,21 @@
 ~rules = ~subsetsCompression.value(~cleanData,~intervals_and_distances);
 ~bag = ~bagOfRules_uncompleted.value(~rules);
 ~bag.do{ arg instance, i; i.post;instance.postln}
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//            import and use unify rules function
+//
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+"/home/ivan/documents/in-construction/unification_of_rules.scd".load;
+~unify_rules = ~unification_of_rules.value(~bag,~intervals_and_distances);
+~unify_rules.do{|x,i| i.post; x.postln}
+
+
+
+
+
+
+
+
+
+

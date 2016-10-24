@@ -226,11 +226,11 @@ def scaled_test(test,data):
 
 
 #   get accuracy
-def get_accuracy_score(scaled_test,y_test,gamma):
+def get_accuracy_score(scaled_test,y_test,rules, gamma):
     y_pred = []
     for instance in scaled_test:
         print(instance)
-        classification = classify(instance,scaled_rules, gamma)
+        classification = classify(instance,rules,gamma)
         print(classification)
         y_pred.append(classification)
     return accuracy_score(y_test, y_pred)
