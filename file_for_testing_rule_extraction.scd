@@ -2,9 +2,17 @@
 //                file for test
 //            rule extraction function
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+"/home/ivan/documents/in-construction/rule_extraction_function.scd".load;
+
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//                 Load Files
+//                and create data
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+//               Intervals and distances
 (
-	"/home/ivan/documents/in-construction/rule_extraction_function.scd".load;
-)
 (~intervals_and_distances = [
 	[
 	[ [0, inf], 1000 ]
@@ -14,21 +22,36 @@
 	[ [0,inf], 1000 ]
 ]
 ]);
-~data = CSVFileReader.readInterpret("/home/ivan/documents/in-construction/band_limited_impulse_oscillator_perceptual_space3.csv");
-// delete observation number
+(      // load X, y train
+x = CSVFileReader.readInterpret("/home/ivan/documents/in-construction/X_train_0.csv");
+y = CSVFileReader.readInterpret("/home/ivan/documents/in-construction/y_train_0.csv");
+);
+       //   data
 (
-~cleanData = [];
-~data.do{arg x;
-	x = x[1..];
-	~cleanData = ~cleanData.add(x);
-};
-~cleanData = ~cleanData[1..]
+~data = [];
+x.do{arg x, i;
+	x = x.add(y[i][0]);
+	~data = ~data.add(x);
+});
 )
-~cleanData.do{arg x; x.postln}
-//      compression process
-~rules = ~subsetsCompression.value(~cleanData,~intervals_and_distances);
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//                   compression process
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(
+~rules = ~subsetsCompression.value(~data,~intervals_and_distances);
 ~bag = ~bagOfRules_uncompleted.value(~rules);
-~bag.do{ arg instance, i; i.post;instance.postln}
+);
+~bag.do{ arg instance, i; i.post;instance.postln};
+//-------         write rules into csv file       -------------
+(
+f = File("/home/ivan/documents/in-construction/report/rules.csv","w");
+~bag.do{arg rule, i;
+	f.write(i + "," + rule + "\n");
+};
+f.close
+)
+
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //            import and use unify rules function
