@@ -2,10 +2,12 @@
                 Documentation of the classifier
                        for its analysis 
 -->
-# Classifier Documentation
+#A Rule Extraction and Classification Example
+This is an example of the rule extraction process and the subsequent use of the rules to build a classifier. It contains the data, the configuration of the model and the obtained results using 10-fold cross-validation.
+The classifier is build by placing either a trapezoidal or a triangular membership function for each parameter of the rules, depending if they have an interval or a single value in that parameter. The extracted rules and the associated membership functions are also discussed.
 
-#Data
-The data used is:
+## Data
+The data used for the experiment is shown below. It is the same data we have been using.
 
 |obs  |freq |nharm|class| 
 |-----|-----|-----|---| 
@@ -216,27 +218,37 @@ The data used is:
 | 205 | 980 | 6   | 3 | 
 | 206 | 996 | 755 | 3 | 
 
-The data is splited for 10-Folds cross-validation using scikit K-Folds cross-validator. The accuracy is calculated by using the sklearn.metrics accuracy\_score.
+Please note that, although the data were constructed to favor the formation of rules (see, for example, observations 1 to 4). These process, at least at that moment, did not follow any particular methodology.
+
+The idea is to propose a specific process for the exploration process.So far, the current instructions for this step are:
+
+1. Explore the space by using the graphical interface (spyder chart in processing) until you find a desired/interesting combination.
+2. From that point tweak (slowly vary) one parameter in turn, getting back to the original point.
+
+-Any other ideas-???
+
+
+The data was split for 10-Folds cross-validation using the scikit K-Folds cross-validator. The accuracy is calculated by using the sklearn.metrics accuracy\_score (both available python libraries).
 
 ## Parameters
-The parameters used are the following.
-For the rule extraction algorithm:
-frequency: from 0 to inf threshold = 1000
-number of upper harmonics: form 0 to inf threshold = 1000
+The parameters used for the rule extraction and the classifier are the following: <br />  
+For the rule extraction algorithm: <br />
+frequency: from 0 to inf, threshold = 1000 <br / > 
+number of upper harmonics: form 0 to inf, threshold = 1000
 
 For the classifier:
 gamma = 2
 
 ## Results
-The individual accuracies are:
+The individual accuracies for the individual folds are:
  
 [ 1.0, 1.0, 1.0, 0.952, 0.904, 1.0, 0.949, 0.900, 0.900, 0.949 ]
 
 And the accuracy of 10-fold cross-validation is: 0.955
 
-## Analysis
+## Analysis of the Results
 ### Rules
-Rules extracted by the rule extraction function on the first training set.
+The rules extracted by the rule extraction function on the first training set are the following:
 
 |Obtained rules                                                     | 
 |-------------------------------------------------------------------| 
@@ -302,22 +314,42 @@ Rules extracted by the rule extraction function on the first training set.
 | 59     [ [ 75    464    582     586 ]    4     3 ]                | 
 
 
-Some of the rules can stil be compressed (but not much).
-For example rules 27, 44, 46, and 1 came from different permutations of the data during the compression.
+Some of the rules can stil be compressed (though not many). -- I am currently working on a script intended to this task considering the multi-threshold issue  --- <br />  
+For example rules 27, 44, 46, and 1 came from different permutations of the data during the compression. Rule 27 is contained in 44 and rule 1 is contained in rule 46.
 
 
 ### Membership functions
 
-The trapezoidal membership functions for each parameter are given by the equation:
+The trapezoidal membership function for the parameter j or the rule k is given by the equation:
 
-membership\_kj(xj,vkj,wkj,gamma):
-membership = 1/2 * (max(0,1-max(0,gamma * min(1,xj-wkj))) + max(0,1-max(0,gamma * min(1,vkj-xj))))
+membership\_kj(xj,vkj,wkj,gamma): <br />  
+membership = 1/2 * ( max(0,1 - max(0,gamma * min(1,xj-wkj)) ) + max( 0,1 - max(0,gamma * min(1,vkj-xj))) )
 
-Where xj is the jth value of any input instance. vkj and wkj are the minimum and maximum values for the jth parameter of rule k. These values are the min amd max of the interval [vkj,. . . , wkj] if the rule has an interval in the jth parameter or vkj = wkj = value, if the rule has a value at the jth parameter. And gamma is the parameter that control the spread of the "rim" of the trapezoidal functions.
+Where xj is the jth value of any input instance. vkj and wkj are the minimum and maximum values of the midium par of the trapezoid in the jth parameter of rule k.
+
+These values are set equal to the min and max of the interval [vkj,. . . , wkj] if the rule has an interval in the jth parameter or vkj = wkj = value, if the rule has a single value at the jth parameter. Finaly, gamma is the parameter that control the spread of the "rim" of the trapezoidal functions.
 
 #### Membership functions plots
-Plots for the membership functions of the parameters 1 and 2, for classes rhythmic, rough and tone, are display below.
+Plots for the membership functions of the parameters 1 and 2, for classes rhythmic, rough and tone, are display below. The data and the rules are normalized after the rule extraction process.
+\newpage
+
+Class 1. Parameters 1 and 2 
+
+<!--![](/home/ivan/documents/in-construction/report/class1_par1.png) -->
+\includegraphics[height = 2in]{/home/ivan/documents/in-construction/report/class1_par1.png}
+\includegraphics[height = 2in]{class1_par2.png}
+
+Class2. Parameters 1 and 2.
+
+\includegraphics[height = 2in]{class2_par1.png}
+\includegraphics[height = 2in]{/home/ivan/documents/in-construction/report/class2_par2.png}
 
 
-![title](path/to/your/image)
-![]
+Class 3. Parameters 1 and 2.
+
+\includegraphics[height = 2in]{class3_par1.png}
+
+![](/home/ivan/documents/in-construction/report/class3_par2.png)
+\newpage
+The parameter 1 is the frequency and parameter 2 is the number of upper harmonics added to the fundamental frequency. In class 1 we can see that the membership functions of the frequency are well defined in the space of low frequencies. In contrast, in the second parameter (num of harm) the membership functions are disperse. This tow facts could be translated in the expression. If the values of the frequency are from 0 to <= 15 (depending, close to 15, a little bit on the number of hermonics), then no matter what happends with the number of harmonics the perceptual sensation is rhythmic. More or less the same behavior is observed looking at class 2. Here "as long as the frequency is in the rough zone, the number of harmonics do not change the perception.
+In class 3, which describes combinations perceibed as "tone", it can be observed that combinations with low number of upper harmonics were chosen.
