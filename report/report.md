@@ -315,5 +315,9 @@ membership = 1/2 * (max(0,1-max(0,gamma * min(1,xj-wkj))) + max(0,1-max(0,gamma 
 
 Where xj is the jth value of any input instance. vkj and wkj are the minimum and maximum values for the jth parameter of rule k. These values are the min amd max of the interval [vkj,. . . , wkj] if the rule has an interval in the jth parameter or vkj = wkj = value, if the rule has a value at the jth parameter. And gamma is the parameter that control the spread of the "rim" of the trapezoidal functions.
 
-#### Ploting membership functions
+#### Membership functions plots
+Plots for the membership functions of the parameters 1 and 2, for classes rhythmic, rough and tone, are display below.
 
+
+![title](path/to/your/image)
+![]

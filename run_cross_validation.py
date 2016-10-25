@@ -50,13 +50,15 @@ mean(accuracy)
 #   Import functions
 from cross_validation_functions import *
 #Import the scaled rules, X_test and y_test for the classifier
-scaled_rules = import_scaled_rules('p_a_r_1_4.csv', 'p_a_r_2_4.csv')
-X_test = X_test('X_test_4.csv')
-y_test = y_test('y_test_4.csv')
+scaled_rules = import_scaled_rules('p_a_r_1_0.csv', 'p_a_r_2_0.csv')
+X_test = X_test('X_test_0.csv')
+y_test = y_test('y_test_0.csv')
 scaled_test = scaled_test(X_test,data)
-get_accuracy_score(scaled_test,y_test,scaled_rules, 4)
+get_accuracy_score(scaled_test,y_test,scaled_rules, 20)
 
 
+
+#.................................................................
 count = 0
 for i in range(len(scaled_test)):
     instance = scaled_test[i]
