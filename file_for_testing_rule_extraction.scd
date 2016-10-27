@@ -54,15 +54,38 @@ f.close
 
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-//            import and use unify rules function
+//            Eliminate the redundant rules
 //
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 "/home/ivan/documents/in-construction/redundant_rules.scd".load;
-
-~new_rules = ~redundant_rules.value(~bag);
-
+(
+~new_rules  = ~redundant_rules.value(~bag);
 ~new_rules.do{|x,i| i.post; x.postln}
+);
+
+(
+~non_redundant = [ ];
+~new_rules.collect({|x|
+if(x.notNil){~non_redundant = ~non_redundant.add(x)}}))
+
+~non_redundant.do{|x,i| [ i, x ].postln}
+
+//&&&&&&&&&&&&&&&&&   write file &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+(f = File("/home/ivan/documents/in-construction/report/non_redundant_rules.csv","w");
+~non_redundant.do{arg rule, i; f.write(i + "," + rule + "\n");};f.close)
+
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//                   Unification of intervals
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
+
+
+
 
 
 

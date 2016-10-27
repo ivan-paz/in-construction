@@ -4,9 +4,12 @@
 //         comming from different compaction orders
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //(~rules = [
+//	[18,  [28, 242], 1],
+//	[[10,18], 28, 1],
 //	[10, [20,88], 1],
-//	[10, [16,20,28,88], 1]  ])
-
+//	[10, [16,20,28,88], 1]
+//])
+(
 (~redundant_rules = {
 arg rules;
 var indexes; var result = [];
@@ -32,10 +35,12 @@ subsets.do{ arg row, i;
 			}};
 			if(values.size>1){
 				'indexes'.post;indexes.post;values.postln;
-				deleteIndexes = ~content.value(values,indexes)
-			}
-		};
-		deleteIndexes.collect({arg index; temporalRules[index]=nil});
+				deleteIndexes = ~content.value(values,indexes);
+				'delete indexes : '.post;deleteIndexes.postln
+			};
+			deleteIndexes.collect({|index| temporalRules[index]=nil})
+		}
+		//deleteIndexes.collect({arg index; temporalRules[index]=nil});
 	};
 	temporalRules
 });
@@ -53,17 +58,22 @@ subsets.do{ arg row, i;
 		dict.add('id'-> i.asString);
 		dictionaries = dictionaries.add(dict)
 	};
-	dictionaries.postln;
+	//dictionaries.postln;
 	dictionaries.do{arg x, i;
 		dictionaries.do{arg y, j;
 			if(
 				( ( x.at('set') & y.at('set') ) == x.at('set') ) &&
 				(i!=j)
 			){
-				x.at('set').postln;
+				//x.at('set').postln;
 				deleteIndexes = deleteIndexes.add(indexes[i])
 			}
 			}};
 		deleteIndexes
 });
+)
 //~content.value( [ [20,88], [16,20,28,88] ], [0,1] )
+//~redundant_rules.value(~rules)
+
+
+

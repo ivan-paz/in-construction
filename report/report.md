@@ -353,3 +353,72 @@ Class 3. Parameters 1 and 2.
 \newpage
 The parameter 1 is the frequency and parameter 2 is the number of upper harmonics added to the fundamental frequency. In class 1 we can see that the membership functions of the frequency are well defined in the space of low frequencies. In contrast, in the second parameter (num of harm) the membership functions are disperse. This tow facts could be translated in the expression. If the values of the frequency are from 0 to <= 15 (depending, close to 15, a little bit on the number of hermonics), then no matter what happends with the number of harmonics the perceptual sensation is rhythmic. More or less the same behavior is observed looking at class 2. Here "as long as the frequency is in the rough zone, the number of harmonics do not change the perception.
 In class 3, which describes combinations perceibed as "tone", it can be observed that combinations with low number of upper harmonics were chosen.
+
+####Eliminate Redundant Rules
+In the example above rules 27 and 44 are redundant <br /> 
+
+|Rules                                                              |
+|-------------------------------------------------------------------|
+| 27     [ 10     [ 20     88 ]     1 ]                             |
+| 44     [ 10     [ 16    20    28     88 ]     1 ]                 |
+
+The "redundant rules" function eliminate those rules. In the example rules 59, 58, 57, 31, and 27 are eliminated with this criteria.
+
+|Non redundant rules                                                | 
+|-------------------------------------------------------------------| 
+| 0     [ [ 8     10 ]    16     1 ]                                | 
+| 1     [ [ 10     18 ]    28     1 ]                               | 
+| 2     [ [ 15     56 ]    5     2 ]                                | 
+| 3     [ [ 19     55 ]    10     2 ]                               | 
+| 4     [ [ 23     35 ]    7     2 ]                                | 
+| 5     [ [ 27     40 ]    874     2 ]                              | 
+| 6     [ [ 28    87    90     672 ]    2     3 ]                   | 
+| 7     [ [ 28     58 ]    42     2 ]                               | 
+| 8     [ [ 36     223 ]    229     2 ]                             | 
+| 9     [ [ 42    101    109     614 ]    3     3 ]                 | 
+| 10     [ [ 56     70 ]    16     2 ]                              | 
+| 11     [ [ 59    73    80     116 ]    1     3 ]                  | 
+| 12     [ [ 73     944 ]    10     3 ]                             | 
+| 13     [ [ 75    109    331    464    582     586 ]    4     3 ]  | 
+| 14     [ [ 81     97 ]    0     3 ]                               | 
+| 15     [ [ 133     145 ]    8     3 ]                             | 
+| 16     [ [ 335     637 ]    17     3 ]                            | 
+| 17     [ 0.2     [ 152    189    425     858 ]     1 ]            | 
+| 18     [ 0.5     [ 18     205 ]     1 ]                           | 
+| 19     [ 1     [ 41    77    526     949 ]     1 ]                | 
+| 20     [ 2     [ 519     813 ]     1 ]                            | 
+| 21     [ 3     [ 21     33 ]     1 ]                              | 
+| 22     [ 4     [ 9    19    22    25    26     349 ]     1 ]      | 
+| 23     [ 5     [ 14     937 ]     1 ]                             | 
+| 24     [ 6     [ 8     24 ]     1 ]                               | 
+| 25     [ 8     [ 48     783 ]     1 ]                             | 
+| 26     [ 9     [ 342     417 ]     1 ]                            | 
+| 27     [ 11     [ 11     121 ]     1 ]                            | 
+| 28     [ 14     [ 10    13    418     930 ]     1 ]               | 
+| 29     [ 15     [ 23     58 ]     1 ]                             | 
+| 30     [ 23     [ 700     803 ]     2 ]                           | 
+| 31     [ 31     [ 445     610 ]     2 ]                           | 
+| 32     [ 32     [ 220     221 ]     2 ]                           | 
+| 33     [ 37     [ 8     27 ]     2 ]                              | 
+| 34     [ 38     [ 3     394 ]     2 ]                             | 
+| 35     [ 41     [ 33     646 ]     2 ]                            | 
+| 36     [ 42     [ 7    101    149     506 ]     2 ]               | 
+| 37     [ 43     [ 17     455 ]     2 ]                            | 
+| 38     [ 50     [ 15     34 ]     2 ]                             | 
+| 39     [ 73     [ 14     42 ]     2 ]                             | 
+| 40     [ 98     [ 10     49 ]     2 ]                             | 
+| 41     [ 8     [ 16     48 ]     1 ]                              | 
+| 42     [ 10     [ 16    20    28     88 ]     1 ]                 | 
+| 43     [ 15     [ 5     22 ]     2 ]                              | 
+| 44     [ 18     [ 28     242 ]     1 ]                            | 
+| 45     [ 19     [ 10    13    275     740 ]     2 ]               | 
+| 46     [ 23     [ 7     700 ]     2 ]                             | 
+| 47     [ 27     [ 829     874 ]     2 ]                           | 
+| 48     [ 35     [ 7     674 ]     2 ]                             | 
+| 49     [ 56     [ 5     16 ]     2 ]                              | 
+| 50     [ 70     [ 16     35 ]     2 ]                             | 
+| 51     [ 73     [ 1     10 ]     3 ]                              | 
+| 52     [ 109     [ 3     4 ]     3 ]                              | 
+| 53     [ 331     [ 4     397 ]     3 ]                            | 
+| 54     [ 614     [ 3     947 ]     3 ]                            | 
+
