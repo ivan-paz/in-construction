@@ -57,9 +57,12 @@ f.close
 //            import and use unify rules function
 //
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-"/home/ivan/documents/in-construction/unification_of_rules.scd".load;
-~unify_rules = ~unification_of_rules.value(~bag,~intervals_and_distances);
-~unify_rules.do{|x,i| i.post; x.postln}
+
+"/home/ivan/documents/in-construction/redundant_rules.scd".load;
+
+~new_rules = ~redundant_rules.value(~bag);
+
+~new_rules.do{|x,i| i.post; x.postln}
 
 
 
