@@ -12,20 +12,21 @@
 //	[3,   [21, 33],  1],
 //	[3,   300,       1]
 //]);
-//~intervals_and_distances = [
-  //    [
 //
-  //            [ [0, inf], 1000]//,  [ [1, inf],  44 ]
-//
-  //    ],
-//
-  //    [
-//
-  //            [ [0,inf], 500 ]
-    //  ]
-//]
-//)
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+(~rules = [
+	[8, [16,48], 1],
+	[8, [48, 783], 1]
+];
+~intervals_and_distances = [
+    [
+		[ [0, inf], 1000]//,  [ [1, inf],  44 ]
+
+	],
+	[
+		[ [0,inf], 500 ]
+	]
+])
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 (~unification_of_rules = {
 arg rules, intervals_and_distances;
 var indexes; var result = [];
@@ -49,28 +50,20 @@ indexes.collect{ arg colToExclude;
 			values = values.add(selection[j]);
 			indexes = indexes.add(j)};
 		}};
-		if(values.size>1){ //values.post; indexes.postln;
-		newIntervals = ~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances)[0];
-		deleteIndexes = ~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances)[1];
-		//[newIntervals,deleteIndexes].postln;
-		//////////   update
-		newIntervals.collect{ arg interval;
-			var newRule;
-			newRule = temporalRules[i];
-			if(newRule.notNil){newRule[colToExclude]=interval;
-			temporalRules = temporalRules.add(newRule)}};
-			deleteIndexes.collect{arg index;
-				temporalRules[index]=nil
-		}
-	};
+		if(values.size>1){
+			values.post; indexes.postln;
+
+	}
+}
 };
-//'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'.postln;
-};
-temporalRules.do{arg x;
-	if(x.notNil){result = result.add(x)}};
-result
+//temporalRules.do{arg x;
+//	if(x.notNil){result = result.add(x)}};
+//result
 });
-//~unification_of_rules.value(~rules,~intervals_and_distances);
+~unification_of_rules.value(~rules,~intervals_and_distances);
+
+
+//-------------------------------------------------------------------
 (~find_threshold ={arg value, colToExclude, intervals_and_distances;
 	var threshold;
 	intervals_and_distances[colToExclude].do{ arg interval;
@@ -78,50 +71,52 @@ result
 	};
 	threshold;
 });
-//~find_threshold.value(3,0,~intervals_and_distances);
+//~find_threshold.value( 48, 0, ~intervals_and_distances);
+
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //             function than receives the values and
-//          creates new intervals considering thresholds
+//          indexes and unify the intervals considering thresholds
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-(~unify_intervals = {
-	arg values,indexes,colToExclude,intervals_and_distances;
-	var unifiedIntervals = [];
-	var indexesOfunifiedIntervals = [];
-	var threshold;
-	var passing = [];
+(~unify_intervals = {|values,indexes,colToExclude,intervals_and_distances|
+	var interval, extension;
+	var threshold, currentInterval=[nil,nil];
 	var flag = 0;
-	var flatArray, newInterval;
-	(values.size-1).do{arg i;
-		if(flag==0){passing = passing.add(values.first)}{
-			passing = passing.add([flatArray[0],flatArray[3]])};
-		values = values[1..];
-		//passing.postln;
-		//values.postln;
-		a = ~class.value(passing.last);
-		b = ~class.value(values.first);
-		flatArray = [a,b].flat.sort;
-		threshold = ~find_threshold.value(flatArray[1],colToExclude,intervals_and_distances);
-		if(
-			(abs(flatArray[0]-flatArray[1])<threshold) &&
-			(abs(flatArray[1]-flatArray[2])<threshold) &&
-			(abs(flatArray[2]-flatArray[3])<threshold)
-	){
-		//'true'.postln;
-		if(unifiedIntervals.indexOfEqual([flatArray[0],flatArray[3]]).isNil){ if(flatArray[0]!=flatArray[3]){
-		unifiedIntervals = unifiedIntervals.add([flatArray[0],flatArray[3]])}};
-		flag = 1;
-		if(indexesOfunifiedIntervals.indexOfEqual(indexes[i]).isNil){
-		indexesOfunifiedIntervals = indexesOfunifiedIntervals.add(indexes[i])};
-		if(indexesOfunifiedIntervals.indexOfEqual(indexes[i+1]).isNil){
-		indexesOfunifiedIntervals = indexesOfunifiedIntervals.add(indexes[i+1])};
-}{flag=0};
+	var temp;
+	var result = [];
+	var tempIndex = [];
+	var deleteIndexes = [];
+	(values.size - 1).do{ |i| //'i : '.post; i.postln;
+		if(flag==0){interval = ~limits.value(values[i])}{
+		interval=currentInterval};
+		extension = ~limits.value(values[i+1]);
+		threshold = ~find_threshold.value(interval[1],colToExclude,intervals_and_distances);
+
+		//'comparando : '.post;[ interval[1],extension[0] ].postln;
+
+		if( abs(interval[1]-extension[0])<= threshold ){
+			flag=1;
+			currentInterval[0]=min(interval[0],extension[0]);
+			currentInterval[1]=max(interval[1],extension[1]);
+			tempIndex = tempIndex.add(i);
+			tempIndex = tempIndex.add(i+1);
+		}{
+			flag = 0;
+			temp = currentInterval.deepCopy;
+			//'Temp : '.post; temp.postln;
+			result = result.add(temp);
+			//'result ==== '.post; result.postln;
+			deleteIndexes = deleteIndexes.add([tempIndex.first,tempIndex.last]);
+			tempIndex = [];
+		}
 	};
-	[unifiedIntervals,indexesOfunifiedIntervals]
+	if(flag==1){result = result.add(currentInterval);deleteIndexes = deleteIndexes.add(tempIndex)};
+	[result,deleteIndexes]
 });
-//~unify_intervals.value([[33,659],[21,33],300],[0,2,3],0,~intervals_and_distances)
-(~class = {arg x;
-	var a, b;
-	if(x.class!=Array){a=x;b=x}{a=x[0];b=x[1]};
-	[a,b]
-});
-//~class.value(2)
+//~unify_intervals.value([ [16,48], [48,783],[10,48],1880,2000,5000, 5020] , [0,1,2,3,4,5,6],0,~intervals_and_distances )
+
+//-------------------------------------------------------------------
+(~limits ={|value| var left, right;
+	if(value.class!=Array){left=value;right=value}{
+	left=value[0];right=value[1]};
+	[left,right]});
+//-------------------------------------------------------------------
