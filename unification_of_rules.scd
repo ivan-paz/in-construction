@@ -26,11 +26,11 @@
 		[ [0,inf], 500 ]
 	]
 ])
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//-------------------------------------------------------------------
 (~unification_of_rules = {
 arg rules, intervals_and_distances;
 var indexes; var result = [];
-var newIntervals, deleteIndexes;
+var intAndIndex;
 var temporalRules = rules.deepCopy;///////
 indexes = (0 .. rules[0].size - 2);
 indexes.collect{ arg colToExclude;
@@ -50,10 +50,10 @@ indexes.collect{ arg colToExclude;
 			values = values.add(selection[j]);
 			indexes = indexes.add(j)};
 		}};
-		if(values.size>1){
-			values.post; indexes.postln;
+		if(values.size>1){'$$$$'.postln; values.post; indexes.postln;
+			intAndIndex=~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances).postln;
 
-	}
+		}
 }
 };
 //temporalRules.do{arg x;
@@ -112,6 +112,7 @@ indexes.collect{ arg colToExclude;
 	if(flag==1){result = result.add(currentInterval);deleteIndexes = deleteIndexes.add(tempIndex)};
 	[result,deleteIndexes]
 });
+//~unify_intervals.value([[48,783],[16,48]],[1,0],0,~intervals_and_distances)
 //~unify_intervals.value([ [16,48], [48,783],[10,48],1880,2000,5000, 5020] , [0,1,2,3,4,5,6],0,~intervals_and_distances )
 
 //-------------------------------------------------------------------
@@ -120,3 +121,17 @@ indexes.collect{ arg colToExclude;
 	left=value[0];right=value[1]};
 	[left,right]});
 //-------------------------------------------------------------------
+(~compare = {|interval,extension|
+	var one, two, three, four;
+	var all = [];
+	interval.collect({|x| all = all.add(x)});
+	extension.collect({|x| all = all.add(x)});
+	one = all.minItem;
+	four = all.maxItem;
+	all = all.removeAt(one); 
+	all;
+});
+~compare.value([1,2],[4,3])
+
+a = [1,2,3,4,5]
+a.removeAt(2)
