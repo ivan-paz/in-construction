@@ -41,8 +41,7 @@ indexes.collect{ arg colToExclude;
 	subsets = temporalRules.slice(nil,section);
 	selection = temporalRules.slice(nil,colToExclude);
 	subsets.do{ arg row, i;
-		var values = [], indexes = [];
-		//'row : '.post; row.postln;
+		var values = [], indexes = [], newRule;
 		values = values.add(selection[i]);indexes=indexes.add(i);
 		subsets.do{ arg row1, j;
 		if((row==row1) && (i!=j)){
@@ -52,13 +51,22 @@ indexes.collect{ arg colToExclude;
 		}};
 		if(values.size>1){'$$$$'.postln; values.post; indexes.postln;
 			intAndIndex=~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances).postln;
-
-		}
+			intAndIndex[0].do{|x|
+					newRule = rules[i].deepCopy;
+					newRule[colToExclude]=x;
+					'newRule = '.post;newRule.postln;
+					if(temporalRules.indexOfEqual.isNil){
+					temporalRules = temporalRules.add(newRule)}
+				};
+				intAndIndex[1].do{|indexes|
+				indexes.do{|id| temporalRules[id]=nil}
+				}
+		};
 }
 };
-//temporalRules.do{arg x;
-//	if(x.notNil){result = result.add(x)}};
-//result
+temporalRules.do{arg x;
+	if(x.notNil){result = result.add(x)}};
+result
 });
 ~unification_of_rules.value(~rules,~intervals_and_distances);
 
@@ -85,15 +93,17 @@ indexes.collect{ arg colToExclude;
 	var result = [];
 	var tempIndex = [];
 	var deleteIndexes = [];
+	var compare;
 	(values.size - 1).do{ |i| //'i : '.post; i.postln;
 		if(flag==0){interval = ~limits.value(values[i])}{
 		interval=currentInterval};
 		extension = ~limits.value(values[i+1]);
-		threshold = ~find_threshold.value(interval[1],colToExclude,intervals_and_distances);
-
-		//'comparando : '.post;[ interval[1],extension[0] ].postln;
-
-		if( abs(interval[1]-extension[0])<= threshold ){
+		//threshold = ~find_threshold.value(interval[1],colToExclude,intervals_and_distances);
+		//'comparando : '.post;e(interval,extension).postln;
+		// Find the intermediate values to compare
+		compare = ~compare.value(interval,extension);
+		threshold = ~find_threshold.value(compare[0],colToExclude,intervals_and_distances);
+		if( abs(compare[0]-compare[1])<= threshold ){
 			flag=1;
 			currentInterval[0]=min(interval[0],extension[0]);
 			currentInterval[1]=max(interval[1],extension[1]);
@@ -114,7 +124,6 @@ indexes.collect{ arg colToExclude;
 });
 //~unify_intervals.value([[48,783],[16,48]],[1,0],0,~intervals_and_distances)
 //~unify_intervals.value([ [16,48], [48,783],[10,48],1880,2000,5000, 5020] , [0,1,2,3,4,5,6],0,~intervals_and_distances )
-
 //-------------------------------------------------------------------
 (~limits ={|value| var left, right;
 	if(value.class!=Array){left=value;right=value}{
@@ -123,15 +132,15 @@ indexes.collect{ arg colToExclude;
 //-------------------------------------------------------------------
 (~compare = {|interval,extension|
 	var one, two, three, four;
-	var all = [];
+	var all = [], delete;
 	interval.collect({|x| all = all.add(x)});
 	extension.collect({|x| all = all.add(x)});
 	one = all.minItem;
-	four = all.maxItem;
-	all = all.removeAt(one); 
-	all;
+	delete = all.indexOfEqual(one);
+	all.removeAt(delete);
+	four = all.maxItem; delete = all.indexOfEqual(four);
+	all.removeAt(delete);
+	all
 });
-~compare.value([1,2],[4,3])
+//~compare.value([1,2],[4,3])
 
-a = [1,2,3,4,5]
-a.removeAt(2)
