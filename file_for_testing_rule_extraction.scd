@@ -61,26 +61,33 @@ f.close
 "/home/ivan/documents/in-construction/redundant_rules.scd".load;
 (
 ~new_rules  = ~redundant_rules.value(~bag);
-~new_rules.do{|x,i| i.post; x.postln}
-);
-
-(
+~new_rules.do{|x,i| i.post; x.postln};
+///////------------------------------------***
 ~non_redundant = [ ];
 ~new_rules.collect({|x|
-if(x.notNil){~non_redundant = ~non_redundant.add(x)}}))
+if(x.notNil){~non_redundant = ~non_redundant.add(x)}})
+)
 
 ~non_redundant.do{|x,i| [ i, x ].postln}
 
 //&&&&&&&&&&&&&&&&&   write file &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 (f = File("/home/ivan/documents/in-construction/report/non_redundant_rules.csv","w");
-~non_redundant.do{arg rule, i; f.write(i + "," + rule + "\n");};f.close)
+~non_redundant.do{arg rule, i; f.write(i + "," + rule + "\n")};f.close)
 
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //                   Unification of intervals
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+"/home/ivan/documents/in-construction/unification_of_rules.scd".load
 
+~unified_rules = ~unification_of_rules.value(~non_redundant,~intervals_and_distances)
 
+~unified_rules.do{|x,i| [i,x].postln};
+//&&&&&&&&&&&&&&&&&     write a file      &&&&&&&&&&&&&&&&&&&&&&
+(
+f = File("/home/ivan/documents/in-construction/report/unified_rules.csv","w");
+~unified_rules.do{arg rule, i;f.write(i + "," + rule + "\n")};f.close
+)
 
 
 

@@ -13,19 +13,19 @@
 //	[3,   300,       1]
 //]);
 //
-(~rules = [
-	[8, [16,48], 1],
-	[8, [48, 783], 1]
-];
-~intervals_and_distances = [
-    [
-		[ [0, inf], 1000]//,  [ [1, inf],  44 ]
 
-	],
-	[
-		[ [0,inf], 500 ]
-	]
-])
+//(~rules = [
+//	[8, [16,48], 1],
+//	[8, [48, 783], 1]
+//];
+//~intervals_and_distances = [
+//	[
+//		[ [0, inf], 1000]//,  [ [1, inf],  44 ]	
+//	],
+//	[
+//		[ [0,inf], 500 ]
+//	]
+//])
 //-------------------------------------------------------------------
 (~unification_of_rules = {
 arg rules, intervals_and_distances;
@@ -49,26 +49,28 @@ indexes.collect{ arg colToExclude;
 			values = values.add(selection[j]);
 			indexes = indexes.add(j)};
 		}};
-		if(values.size>1){'$$$$'.postln; values.post; indexes.postln;
+		if(values.size>1){'values and indexes : '.post; values.post; indexes.postln;
 			intAndIndex=~unify_intervals.value(values,indexes,colToExclude,intervals_and_distances).postln;
 			intAndIndex[0].do{|x|
 					newRule = rules[i].deepCopy;
 					newRule[colToExclude]=x;
 					'newRule = '.post;newRule.postln;
-					if(temporalRules.indexOfEqual.isNil){
-					temporalRules = temporalRules.add(newRule)}
+					if(temporalRules.indexOfEqual(newRule).isNil){
+					temporalRules = temporalRules.add(newRule);'regla añadida'.postln}{'INDEX : '.post;temporalRules.indexOfEqual(newRule).postln}
 				};
 				intAndIndex[1].do{|indexes|
 				indexes.do{|id| temporalRules[id]=nil}
 				}
 		};
-}
+};
+'temporal rules'.postln;
+temporalRules.do{|x,i| [i,x].postln}
 };
 temporalRules.do{arg x;
 	if(x.notNil){result = result.add(x)}};
 result
 });
-~unification_of_rules.value(~rules,~intervals_and_distances);
+//~unification_of_rules.value(~rules,~intervals_and_distances);
 
 
 //-------------------------------------------------------------------
@@ -107,8 +109,8 @@ result
 			flag=1;
 			currentInterval[0]=min(interval[0],extension[0]);
 			currentInterval[1]=max(interval[1],extension[1]);
-			tempIndex = tempIndex.add(i);
-			tempIndex = tempIndex.add(i+1);
+			tempIndex = tempIndex.add(indexes[i]);///******
+			tempIndex = tempIndex.add(indexes[i+1]);///*****
 		}{
 			flag = 0;
 			temp = currentInterval.deepCopy;
