@@ -91,6 +91,12 @@ f = File("/home/ivan/documents/in-construction/report/unified_rules.csv","w");
 
 
 
+??????
+//----        test the classification accuracy     -----------------//
+//----            of the final set of rules        -----------------//
+//-------------------------------------------------------------------
+
+
 
 
 

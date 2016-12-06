@@ -423,12 +423,13 @@ The "redundant rules" function eliminate those rules. In the example rules 59, 5
 | 54     [ 614     [ 3     947 ]     3 ]                            | 
 
 #### Unification of rule intervals
-In the table above, intervals of rules 25 and 41 as well as rules 30 and 46 can be unified.
+In the table above, intervals of rules 25 and 41 as well as rules 30 and 46 can be unified. In the case of rules 25 and 41
 
-[8, [48, 783], 1] and [8, [16,48], 1] can be expressed as [8, [16, 783], 1].
+[8, [48, 783], 1] and [8, [16,48], 1] they can be expressed as [8, [16, 783], 1].
 
 With these reductions the new set of rules is:
-|                                                                   | 
+
+|Rules after unify the possible intervals                           | 
 |-------------------------------------------------------------------| 
 | 0     [ [ 8     10 ]    16     1 ]                                | 
 | 1     [ [ 10     18 ]    28     1 ]                               | 
