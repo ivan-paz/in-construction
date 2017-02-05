@@ -23,7 +23,6 @@ create_train_test(X,y,10)
 #                 Run SuperCollider file
 ##%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 accuracy = []
 file_number = -1
 for i in range(10):
@@ -41,21 +40,20 @@ from statistics import mean
 mean(accuracy)
 
 
-
 """
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-                      Manual version
+                    Manual version
+             selecting individual partitions
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 """
 #   Import functions
 from cross_validation_functions import *
 #Import the scaled rules, X_test and y_test for the classifier
-scaled_rules = import_scaled_rules('p_a_r_1_0.csv', 'p_a_r_2_0.csv')
-X_test = X_test('X_test_0.csv')
-y_test = y_test('y_test_0.csv')
+scaled_rules = import_scaled_rules('p_a_r_1_1.csv', 'p_a_r_2_1.csv')
+X_test = X_test('X_test_1.csv')
+y_test = y_test('y_test_1.csv')
 scaled_test = scaled_test(X_test,data)
 get_accuracy_score(scaled_test,y_test,scaled_rules, 20)
-
 
 
 #.................................................................
@@ -68,6 +66,6 @@ for i in range(len(scaled_test)):
         count = count + 1
     else:
         print('check this')
-print(count/len(scaled_test))
+print( count / len(scaled_test))
 
 
